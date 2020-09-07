@@ -1,0 +1,46 @@
+{
+	"name": "@zipsesports/sos-wrapper",
+	"version": "0.1.0",
+	"description": "Typed isomorphic wrapper for the Rocket League SOS Overlay System project suite",
+	"main": "lib/index.js",
+	"types": "lib/index.d.ts",
+	"scripts": {
+		"build": "tsc -p .",
+		"test-client": "parcel test.html",
+		"test-server": "ts-node test.ts"
+	},
+	"repository": "zipsesportsnetwork/sos-wrapper",
+	"keywords": [
+		"rocket league",
+		"sos overlay system",
+		"overlay"
+	],
+	"author": "Max Davitt <med112@zips.uakron.edu>",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/zipsesportsnetwork/sos-wrapper/issues"
+	},
+	"homepage": "https://github.com/zipsesportsnetwork/sos-wrapper#readme",
+	"devDependencies": {
+		"@types/ws": "^7.2.6",
+		"husky": "^4.2.5",
+		"parcel-bundler": "^1.12.4",
+		"prettier": "^2.1.1",
+		"pretty-quick": "^3.0.0",
+		"ts-node": "^9.0.0",
+		"typescript": "^4.0.2"
+	},
+	"dependencies": {
+		"emittery": "^0.7.1",
+		"isomorphic-ws": "^4.0.1",
+		"ws": "^7.3.1"
+	},
+	"browserslist": [
+		"last 1 Chrome versions"
+	],
+	"husky": {
+		"hooks": {
+			"pre-commit": "pretty-quick --staged"
+		}
+	}
+}

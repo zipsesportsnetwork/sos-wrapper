@@ -1,0 +1,11 @@
+root = true
+
+[**]
+end_of_line = lf
+indent_style = tab
+insert_final_newline = true
+
+[{node_modules/**,lib/**}]
+end_of_line = unset
+indent_style = unset
+insert_final_newline = unset
