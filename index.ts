@@ -43,6 +43,9 @@ type EventDataMap = {
 				isDead: boolean;
 				isSonic: boolean;
 				name: string;
+				/**
+				 * Platform-specific player ID e.g. SteamID
+				 */
 				primaryID: number;
 				saves: number;
 				score: number;
@@ -72,8 +75,6 @@ type EventDataMap = {
 	"game:podium_start": string;
 };
 
-type Event = keyof EventDataMap;
-
 /**
  * Connect to the WebSocket server at the specified port and wrap it in a typed `Emittery`
  * @param port Port to connect to the relay server at, defaults to `49322`
@@ -94,7 +95,10 @@ export default function wrap(
 	});
 
 	ws.onmessage = ({ data: json }) => {
-		const { data, event }: { data: unknown; event: Event } = JSON.parse(
+		const {
+			data,
+			event,
+		}: { data: unknown; event: keyof EventDataMap } = JSON.parse(
 			json.toString()
 		);
 		emitter.emit(event, data as EventDataMap[typeof event]);
