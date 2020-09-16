@@ -1,6 +1,6 @@
 {
 	"name": "@zipsesports/sos-wrapper",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Typed isomorphic wrapper for the Rocket League SOS Overlay System project suite",
 	"main": "lib/index.js",
 	"types": "lib/index.d.ts",
