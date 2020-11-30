@@ -112,6 +112,10 @@ export type EventDataMap = {
 				 */
 				attacker: "" | PlayerID;
 				/**
+				 * Avatar URL pulled from Steam using `primaryID`, provided by [our fork of `sos-ws-relay`](https://github.com/zipsesportsnetwork/sos-ws-relay)
+				 */
+				avatarURL?: string;
+				/**
 				 * Percentage of boost the player has left
 				 */
 				boost: number;
