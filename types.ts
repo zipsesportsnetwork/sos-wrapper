@@ -158,6 +158,9 @@ export type EventDataMap = {
 					color_secondary: string;
 				}
 			>;
+			/**
+			 * Game time
+			 */
 			time: number;
 			/**
 			 * `name` of winning team
@@ -353,6 +356,9 @@ export type EventDataMap = {
 	"game:match_destroyed": OnlyMatchGUID;
 	"game:replay_created": OnlyMatchGUID;
 	"game:nameplate_tick": OnlyMatchGUID & {
+		/**
+		 * Ball and player nameplates
+		 */
 		nameplates: {
 			/**
 			 * Data about the ball nameplate
@@ -364,7 +370,7 @@ export type EventDataMap = {
 				radius: number;
 			};
 			/**
-			 * Map of `PlayerID`s to data about the corresponding player's nameplate
+			 * Map of `PlayerID`s to data about the corresponding player's nameplate data
 			 */
 			players: Record<
 				PlayerID,
