@@ -25,35 +25,95 @@ export type BasePlayer = {
 	 */
 	id: PlayerID;
 };
+export type OnlyMatchGUID = {
+	/**
+	 * Match GUID
+	 */
+	match_guid: string;
+};
+export type XY = {
+	/**
+	 * X coordinate
+	 */
+	X: number;
+	/**
+	 * Y coordinate
+	 */
+	Y: number;
+};
+export type XYZ = XY & {
+	/**
+	 * Z coordinate
+	 */
+	Z: number;
+};
+export type Rotation = {
+	/**
+	 * Pitch
+	 */
+	pitch: number;
+	/**
+	 * Roll
+	 */
+	roll: number;
+	/**
+	 * Yaw
+	 */
+	yaw: number;
+};
+export type NameplateStatus = {
+	/**
+	 * Whether or not the nameplate is visible
+	 */
+	isvisible: boolean;
+	/**
+	 * Position of the nameplate
+	 */
+	position: {
+		/**
+		 * X coordinate of nameplate
+		 */
+		x: number;
+		/**
+		 * Y coordinate of nameplate
+		 */
+		y: number;
+		/**
+		 * Depth of nameplate
+		 */
+		depth: number;
+	};
+};
 
 /**
  * From the README: https://gitlab.com/bakkesplugins/sos/sos-plugin/-/blob/4d815d9ebc582cfeeedd22db8cdfcf2c56e8c216/README.md
  */
 export type EventDataMap = {
 	"wsRelay:info": "Connected!";
-	"game:update_state": {
-		event: "gamestate";
+	"game:update_state": OnlyMatchGUID & {
+		event: string;
 		game: {
 			/**
-			 * Ball speed in km/h
+			 * Arena
 			 */
-			ballSpeed: number;
+			arena: string;
 			/**
-			 * Team number of player who last touched the ball
+			 * Ball information
 			 */
-			ballTeam: number;
-			/**
-			 * X coordinate of ball
-			 */
-			ballX: number;
-			/**
-			 * Y coordinate of ball
-			 */
-			ballY: number;
-			/**
-			 * Z coordinate of ball
-			 */
-			ballZ: number;
+			ball: {
+				/**
+				 * Ball location
+				 */
+				location: XYZ;
+				/**
+				 * Ball speed
+				 */
+				speed: number;
+				/**
+				 * Ball possession
+				 */
+				team: TeamNumber;
+			};
 			/**
 			 * If camera view has target
 			 */
@@ -88,6 +148,14 @@ export type EventDataMap = {
 					 * Score of team
 					 */
 					score: number;
+					/**
+					 * Team's primary color (as a hex code)
+					 */
+					color_primary: string;
+					/**
+					 * Team's secondary color (as a hex code)
+					 */
+					color_secondary: string;
 				}
 			>;
 			time: number;
@@ -111,10 +179,6 @@ export type EventDataMap = {
 				 * Attacker if player was demolished (can be `""`)
 				 */
 				attacker: "" | PlayerID;
-				/**
-				 * Avatar URL pulled from Steam using `primaryID`, provided by [our fork of `sos-ws-relay`](https://github.com/zipsesportsnetwork/sos-ws-relay)
-				 */
-				avatarURL?: string;
 				/**
 				 * Percentage of boost the player has left
 				 */
@@ -140,13 +204,29 @@ export type EventDataMap = {
 				 */
 				isDead: boolean;
 				/**
+				 * Whether or not the player is powersliding
+				 */
+				isPowersliding: boolean;
+				/**
 				 * Whether or not the player is going supersonic
 				 */
 				isSonic: boolean;
 				/**
+				 * The players location and rotation
+				 */
+				location: XYZ & Rotation;
+				/**
+				 * Whether or not the player is on the ground
+				 */
+				onGround: boolean;
+				/**
+				 * Whether or not the player is on the wall
+				 */
+				onWall: boolean;
+				/**
 				 * Platform-specific player ID e.g. SteamID
 				 */
-				primaryID: number;
+				primaryID: string;
 				/**
 				 * Number of saves the player has made
 				 */
@@ -155,6 +235,10 @@ export type EventDataMap = {
 				 * The player's score
 				 */
 				score: number;
+				/**
+				 * Spectator shortcut key
+				 */
+				shortcut: number;
 				/**
 				 * Number of shots on goal the player has made
 				 */
@@ -171,25 +255,13 @@ export type EventDataMap = {
 				 * Ball touches
 				 */
 				touches: number;
-				/**
-				 * X coordinate of player
-				 */
-				x: number;
-				/**
-				 * Y coordinate of player
-				 */
-				y: number;
-				/**
-				 * Z coordinate of player
-				 */
-				z: number;
 			}
 		>;
 	};
-	"game:match_created": "game_match_created";
-	"game:initialized": "initialized";
-	"game:pre_countdown_begin": "pre_game_countdown_begin";
-	"game:post_countdown_begin": "post_game_countdown_begin";
+	"game:match_created": OnlyMatchGUID;
+	"game:initialized": OnlyMatchGUID;
+	"game:pre_countdown_begin": OnlyMatchGUID;
+	"game:post_countdown_begin": OnlyMatchGUID;
 	"game:statfeed_event": {
 		/**
 		 * AKA receiver
@@ -210,9 +282,23 @@ export type EventDataMap = {
 		 */
 		goalspeed: number;
 		/**
+		 * Time of goal
+		 */
+		goaltime: number;
+		/**
+		 * Impact location of goal
+		 */
+		impact_location: XY;
+		/**
 		 * Player who scored the goal
 		 */
-		scorer: BasePlayer;
+		scorer: BasePlayer & {
+			teamnum: TeamNumber;
+		};
+		/**
+		 * Player assisting with goal
+		 */
+		assister: BasePlayer;
 		/**
 		 * Data about the last
 		 */
@@ -227,14 +313,69 @@ export type EventDataMap = {
 			speed: number;
 		};
 	};
-	"game:replay_start": "game_replay_start";
-	"game:replay_will_end": "game_replay_will_end";
-	"game:replay_end": "game_replay_end";
-	"game:match_ended": {
+	"game:replay_start": OnlyMatchGUID;
+	"game:replay_will_end": OnlyMatchGUID;
+	"game:replay_end": OnlyMatchGUID;
+	"game:match_ended": OnlyMatchGUID & {
 		/**
 		 * Winning team number
 		 */
 		winner_team_num: TeamNumber;
 	};
-	"game:podium_start": "game_podium_start";
+	"game:podium_start": OnlyMatchGUID;
+	"game:clock_started": OnlyMatchGUID;
+	"game:clock_stopped": OnlyMatchGUID;
+	"game:clock_updated_seconds": OnlyMatchGUID;
+	"game:round_started_go": "game_round_started_go";
+	"game:ball_hit": OnlyMatchGUID & {
+		/**
+		 * Player that hit the ball
+		 */
+		player: BasePlayer;
+		/**
+		 * Ball speed (before and after hit) and location
+		 */
+		ball: {
+			/**
+			 * Ball speed before being hit
+			 */
+			pre_hit_speed: number;
+			/**
+			 * Ball location
+			 */
+			location: XYZ;
+			/**
+			 * Ball speed after being hit
+			 */
+			post_hit_speed: number;
+		};
+	};
+	"game:match_destroyed": OnlyMatchGUID;
+	"game:replay_created": OnlyMatchGUID;
+	"game:nameplate_tick": OnlyMatchGUID & {
+		nameplates: {
+			/**
+			 * Data about the ball nameplate
+			 */
+			ball: NameplateStatus & {
+				/**
+				 * Ball nameplate radius
+				 */
+				radius: number;
+			};
+			/**
+			 * Map of `PlayerID`s to data about the corresponding player's nameplate
+			 */
+			players: Record<
+				PlayerID,
+				NameplateStatus & {
+					/**
+					 * Player nameplate scale
+					 */
+					scale: number;
+				}
+			>;
+		};
+	};
+	"sos:version": string;
 };

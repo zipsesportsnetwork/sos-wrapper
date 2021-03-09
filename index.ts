@@ -3,7 +3,7 @@ import WebSocket from "isomorphic-ws";
 
 import { EventDataMap } from "./types";
 
-const events: (keyof EventDataMap)[] = [
+export const events: (keyof EventDataMap)[] = [
 	"game:update_state",
 	"game:match_created",
 	"game:initialized",
@@ -16,6 +16,15 @@ const events: (keyof EventDataMap)[] = [
 	"game:replay_end",
 	"game:match_ended",
 	"game:podium_start",
+	"game:match_destroyed",
+	"game:replay_created",
+	"game:nameplate_tick",
+	"game:clock_started",
+	"game:clock_stopped",
+	"game:clock_updated_seconds",
+	"game:round_started_go",
+	"game:ball_hit",
+	"sos:version",
 ];
 
 function sendWsRelayEvent(
