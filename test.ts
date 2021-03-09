@@ -1,4 +1,4 @@
-import wrap from ".";
+import wrap from "./index";
 
 (async () => {
 	const emitter = await wrap();
