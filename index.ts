@@ -49,12 +49,14 @@ function sendWsRelayEvent(
 /**
  * Connect to the WebSocket server at the specified port and wrap it in a typed `Emittery`
  * @param port Port to connect to the relay server at, defaults to `49322`
+ * @param hostname Hostname to connect to the relay server at, defaults to `"localhost"`
  */
 export default function wrap(
-	port: number = 49322
+	port: number = 49322,
+	hostname: string = "localhost"
 ): Promise<Emittery.Typed<EventDataMap>> {
 	const emitter = new Emittery.Typed<EventDataMap>();
-	const ws = new WebSocket(`ws://localhost:${port}`);
+	const ws = new WebSocket(`ws://${hostname}:${port}`);
 
 	(emitter as Emittery).on(Emittery.listenerAdded, ({ eventName }) =>
 		sendWsRelayEvent(ws, "wsRelay:register", eventName)
